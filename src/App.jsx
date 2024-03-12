@@ -64,9 +64,16 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, }}>
+        <AppBar
+          position='fixed'
+          sx={{ 
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            backgroundImage: 'none',
+            backgroundColor: '#3f51b5',
+          }}
+        >
           <Toolbar>
-            <Typography variant="h5" sx={{ cursor: 'pointer', userSelect: 'none' }}>
+            <Typography variant='h5' sx={{ cursor: 'pointer', userSelect: 'none' }}>
               Naughty pie
             </Typography>
             <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
@@ -111,7 +118,7 @@ export default function App() {
           </Toolbar>
         </AppBar>
         <Drawer
-          variant="permanent"
+          variant='permanent'
           sx={{
             width: drawerWidth,
             flexShrink: 0,
@@ -146,11 +153,12 @@ export default function App() {
             </List>
             <Divider sx={{ borderTopWidth: '2px' }}/>
             <Button
-              variant='primary' 
+              variant='secondary'
               sx={{
                 fontSize: '0.9rem',
                 fontWeight: 500,
-                margin: '1rem',
+                m: '1rem',
+                px: '0.1rem',
                 outline: 'none',
                 '&:focus': {
                   outline: 'none',
@@ -159,14 +167,14 @@ export default function App() {
             >
               enable notifications
             </Button>
-          </Box>
+        </Box>
         </Drawer>
         <Button
           variant='contained'
-          sx={{ 
+          sx ={{
             '&:focus': {
               outline: 'none',
-            }, 
+            },
           }}
         >
           Muie
