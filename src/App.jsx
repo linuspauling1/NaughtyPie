@@ -26,75 +26,50 @@ import { useState } from 'react';
 
 const drawerWidth = 250;
 
-const darkTheme = createTheme({
+const pages = [ {text: 'users', icon: <GroupIcon />}, 
+                {text: 'apps', icon: <AppsIcon />}, 
+                {text: 'clients', icon: <DevicesOtherIcon />}, 
+                {text: 'admin', icon: <AccountCircleIcon />},
+                {text: 'logout', icon: <ExitToAppIcon />} ];
+
+const servers = ['A Raspberry PI', 'Some server'];
+
+const commonButtonStyles = {
+  root: {
+    '&:focus': {
+      outline: 'none',
+    },
+  },
+};
+
+const themeFactory = (isLight) => ({
   palette: {
-    mode: 'dark',
+    mode: isLight ? 'light' : 'dark',
     primary: {
       main: '#3f51b5',
     },
     background: {
-      default: '#303030',
+      default: isLight ? '#ffffff' : '#303030',
     },
     drawerBackground: {
-      main: '#424242',
+      main: isLight ? '#ffffff' : '#424242',
     },
   },
   components: {
     MuiButton: {
-      styleOverrides: {
-        root: {
-          '&:focus': {
-            outline: 'none',
-          },
-        },
-      },
+      styleOverrides: commonButtonStyles,
     },
     MuiIconButton: {
-      styleOverrides: {
-        root: {
-          '&:focus': {
-            outline: 'none',
-          },
-        },
-      },
-    },
+      styleOverrides: commonButtonStyles,
+    }
   },
-});
+})
 
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#3f51b5',
-    },
-    drawerBackground: {
-      main: '#ffffff',
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          '&:focus': {
-            outline: 'none',
-          },
-        },
-      },
-    },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          '&:focus': {
-            outline: 'none',
-          },
-        },
-      },
-    },
-  },
-});
+const darkTheme = createTheme(themeFactory(false))
+const lightTheme = createTheme(themeFactory(true))
 
 export default function App() {
-  const [theme, setTheme] = useState(lightTheme)
+  const [theme, setTheme] = useState(darkTheme)
   const toggleTheme = () => {
     setTheme(theme === lightTheme ? darkTheme : lightTheme)
   }
@@ -117,11 +92,7 @@ export default function App() {
             <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
               @0.0.0
             </Typography>
-            {[{text: 'users', icon: <GroupIcon />}, 
-              {text: 'apps', icon: <AppsIcon />}, 
-              {text: 'clients', icon: <DevicesOtherIcon />}, 
-              {text: 'admin', icon: <AccountCircleIcon />},
-              {text: 'logout', icon: <ExitToAppIcon />}].map((element)=>(
+            {pages.map((element)=>(
               <Button variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
                 {element.text}
               </Button>
@@ -150,12 +121,7 @@ export default function App() {
           }}
         >
           <Toolbar />
-          <Box sx={{ 
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            }}
-          >
+          <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', }}>
             <List sx={{ padding: '0' }}>
               <ListItemButton>
                 <ListItemText primary='All Messages' />
@@ -163,8 +129,8 @@ export default function App() {
             </List>
             <Divider />
             <List sx={{ padding: '0' }}>
-              {['A Raspberry PI', 'Some server'].map((text) => (
-                <ListItem key={text} disablePadding>
+              {servers.map((text, id) => (
+                <ListItem key={id} disablePadding>
                   <ListItemButton>
                     <ListItemText primary={text} />
                   </ListItemButton>
@@ -172,15 +138,8 @@ export default function App() {
               ))}
             </List>
             <Divider sx={{ borderTopWidth: '2px' }}/>
-            <Typography align="center" style={{marginTop: 10}}>
-              <Button
-                variant='secondary'
-                sx={{
-                  fontSize: '0.88rem',
-                  fontWeight: 500,
-                  p: '0.3rem 0.5rem',
-                }}
-              >
+            <Typography align='center' style={{marginTop: 10}}>
+              <Button variant='primary' sx={{ p: '0.3rem 0.5rem', }}>
                   enable notifications
               </Button>
             </Typography>
