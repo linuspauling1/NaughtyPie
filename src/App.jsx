@@ -24,8 +24,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 
-const drawerWidth = 240;
-const iconSx = { fontSize: '1.3rem', marginRight: '0.4rem', };
+const drawerWidth = 250;
 
 const darkTheme = createTheme({
   palette: {
@@ -40,8 +39,27 @@ const darkTheme = createTheme({
       main: '#424242',
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+  },
 });
-
 
 const lightTheme = createTheme({
   palette: {
@@ -51,6 +69,26 @@ const lightTheme = createTheme({
     },
     drawerBackground: {
       main: '#ffffff',
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
     },
   },
 });
@@ -79,41 +117,23 @@ export default function App() {
             <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
               @0.0.0
             </Typography>
-            {[{text: 'users', icon: <GroupIcon sx={iconSx} />}, 
-              {text: 'apps', icon: <AppsIcon sx={iconSx} />}, 
-              {text: 'clients', icon: <DevicesOtherIcon sx={iconSx} />}, 
-              {text: 'admin', icon: <AccountCircleIcon sx={iconSx} />},
-              {text: 'logout', icon: <ExitToAppIcon sx={iconSx} />}].map((element)=>(
-              <Button 
-                variant='primary'
-                sx={{
-                  '&:focus': {
-                    outline: 'none',
-                  },
-                  padding: '0.4rem',
-                }}
-              >
-                {element.icon}
+            {[{text: 'users', icon: <GroupIcon />}, 
+              {text: 'apps', icon: <AppsIcon />}, 
+              {text: 'clients', icon: <DevicesOtherIcon />}, 
+              {text: 'admin', icon: <AccountCircleIcon />},
+              {text: 'logout', icon: <ExitToAppIcon />}].map((element)=>(
+              <Button variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
                 {element.text}
               </Button>
             ))}
-            <IconButton onClick={toggleTheme} sx={{ 
-              color: 'inherit',
-              '&:focus': {
-                outline: 'none',
-              },
-              }}>
-              <HighlightIcon sx={{ margin: '3px', fontSize: '1.6rem' }} />
+            <IconButton onClick={toggleTheme} sx={{ color: 'inherit', }}>
+              <HighlightIcon sx={{ margin: '3px',}} />
             </IconButton>
             <IconButton
-            onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')} 
-            sx={{ 
-              color: 'inherit',
-              '&:focus': {
-                outline: 'none',
-              },
-              }}>
-              <GitHubIcon sx={{ margin: '3px', fontSize: '1.6rem' }} />
+              onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')} 
+              sx={{ color: 'inherit', }}
+            >
+              <GitHubIcon sx={{ margin: '3px', fontSize: '1.65rem', }} />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -152,31 +172,21 @@ export default function App() {
               ))}
             </List>
             <Divider sx={{ borderTopWidth: '2px' }}/>
-            <Button
-              variant='secondary'
-              sx={{
-                fontSize: '0.9rem',
-                fontWeight: 500,
-                m: '1rem',
-                px: '0.1rem',
-                outline: 'none',
-                '&:focus': {
-                  outline: 'none',
-                },
-              }}
-            >
-              enable notifications
-            </Button>
-        </Box>
+            <Typography align="center" style={{marginTop: 10}}>
+              <Button
+                variant='secondary'
+                sx={{
+                  fontSize: '0.88rem',
+                  fontWeight: 500,
+                  p: '0.3rem 0.5rem',
+                }}
+              >
+                  enable notifications
+              </Button>
+            </Typography>
+          </Box>
         </Drawer>
-        <Button
-          variant='contained'
-          sx ={{
-            '&:focus': {
-              outline: 'none',
-            },
-          }}
-        >
+        <Button variant='contained'>
           Muie
         </Button>
       </Box>
