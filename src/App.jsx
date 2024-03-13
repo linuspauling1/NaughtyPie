@@ -98,13 +98,13 @@ export default function App() {
               </Button>
             ))}
             <IconButton onClick={toggleTheme} sx={{ color: 'inherit', }}>
-              <HighlightIcon sx={{ margin: '3px',}} />
+              <HighlightIcon sx={{ margin: '3px', }} />
             </IconButton>
             <IconButton
-              onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')} 
+              onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')}
               sx={{ color: 'inherit', }}
             >
-              <GitHubIcon sx={{ margin: '3px', fontSize: '1.65rem', }} />
+              <GitHubIcon sx={{ margin: '3px', fontSize: '1.7rem' }} />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -139,7 +139,7 @@ export default function App() {
             </List>
             <Divider sx={{ borderTopWidth: '2px' }}/>
             <Typography align='center' style={{marginTop: 10}}>
-              <Button variant='primary' sx={{ p: '0.3rem 0.5rem', }}>
+              <Button variant='primary' sx={{ p: '0.3rem 0.5rem', transitionDuration: '0ms' }}>
                   enable notifications
               </Button>
             </Typography>
