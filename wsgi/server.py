@@ -44,7 +44,11 @@ def hello_world():
     db.session.add(admin)
     db.session.commit()
     all_users = User.query.all()
-    print(all_users)
+    for user in all_users:
+        print("Username:", user.username)
+        print("Passcode:", user.passcode)
+        print("Machines:", user.machines)
+        print("--------------")
 
 @socketio.on('disconnect')
 def bye_bye():
