@@ -22,7 +22,10 @@ import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5000');
 
 const drawerWidth = 250;
 
@@ -69,10 +72,22 @@ const darkTheme = createTheme(themeFactory(false))
 const lightTheme = createTheme(themeFactory(true))
 
 export default function App() {
+  
   const [theme, setTheme] = useState(darkTheme)
   const toggleTheme = () => {
     setTheme(theme === lightTheme ? darkTheme : lightTheme)
   }
+
+  const [dateTime, setDateTime] = useState('')
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to server!')
+    })
+    socket.on('datetime', (data) => {
+      setDateTime(data)
+    })
+  }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
@@ -92,8 +107,8 @@ export default function App() {
             <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
               @0.0.0
             </Typography>
-            {pages.map((element)=>(
-              <Button variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
+            {pages.map((element, index)=>(
+              <Button key={index} variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
                 {element.text}
               </Button>
             ))}
@@ -146,7 +161,7 @@ export default function App() {
           </Box>
         </Drawer>
         <Button variant='contained'>
-          Muie
+          {dateTime.date}
         </Button>
       </Box>
     </ThemeProvider>
