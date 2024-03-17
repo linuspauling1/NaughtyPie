@@ -1,15 +1,9 @@
 bidict==0.23.1
-click @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/click_1699473800648/work
-colorama @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/colorama_1699472650914/work
-Flask @ file:///C:/b/abs_efc024w7fv/croot/flask_1702980041157/work
 Flask-Cors==4.0.0
 Flask-SocketIO==5.3.6
 Flask-SQLAlchemy==3.1.1
 greenlet==3.0.3
 h11==0.14.0
-itsdangerous @ file:///tmp/build/80754af9/itsdangerous_1621432558163/work
-Jinja2 @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/jinja2_1707426091452/work
-MarkupSafe @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/markupsafe_1707425732791/work
 python-dotenv==1.0.1
 python-engineio==4.9.0
 python-socketio==5.11.1
@@ -17,6 +11,5 @@ setuptools==68.2.2
 simple-websocket==1.0.0
 SQLAlchemy==2.0.28
 typing_extensions==4.10.0
-Werkzeug @ file:///C:/b/abs_3901hwqcw0/croot/werkzeug_1706210134718/work
 wheel==0.41.2
 wsproto==1.2.0

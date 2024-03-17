@@ -13,6 +13,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
+
 import IconButton from '@mui/material/IconButton'
 import GitHubIcon from '@mui/icons-material/GitHub';
 import HighlightIcon from '@mui/icons-material/Highlight';
@@ -24,6 +25,8 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+
+import { TextField, Stack, Grid } from '@mui/material';
 
 const socket = io('http://localhost:5000');
 
@@ -71,22 +74,12 @@ const themeFactory = (isLight) => ({
 const darkTheme = createTheme(themeFactory(false))
 const lightTheme = createTheme(themeFactory(true))
 
-export default function App() {
+export default function Layout() {
   
   const [theme, setTheme] = useState(darkTheme)
   const toggleTheme = () => {
     setTheme(theme === lightTheme ? darkTheme : lightTheme)
   }
-
-  const [dateTime, setDateTime] = useState('')
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to server!')
-    })
-    socket.on('datetime', (data) => {
-      setDateTime(data)
-    })
-  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -160,10 +153,35 @@ export default function App() {
             </Typography>
           </Box>
         </Drawer>
-        <Button variant='contained'>
-          {dateTime.date}
-        </Button>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          sx={{ minHeight: '100vh' }} 
+        >
+          <Toolbar/>
+          <Box>
+            <Typography variant='h4' sx={{my: '2rem'}}>Login</Typography>
+            <Stack
+              spacing={2.5}
+              alignItems='center' justifyContent='center'
+              sx={{
+                boxShadow: '10',
+                borderRadius: '3px',
+                p: '1.4rem 2.1rem',
+                bgcolor: theme.palette.drawerBackground.main,
+              }}
+            >
+              <TextField id='username' label='Username' variant='standard' />
+              <TextField id='passcode' label='Password' variant='standard' type='password' />
+              <Typography>
+                <Button variant='contained' size='large'>login</Button>
+              </Typography>
+            </Stack>
+          </Box>
+        </Grid>
       </Box>
     </ThemeProvider>
   );
 }
+
