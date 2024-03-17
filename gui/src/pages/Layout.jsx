@@ -24,21 +24,22 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
+
 import io from 'socket.io-client';
 
-import { TextField, Stack, Grid } from '@mui/material';
+import Login from './Login';
 
 const socket = io('http://localhost:5000');
 
 const drawerWidth = 250;
 
-const pages = [ {text: 'users', icon: <GroupIcon />}, 
-                {text: 'apps', icon: <AppsIcon />}, 
-                {text: 'clients', icon: <DevicesOtherIcon />}, 
-                {text: 'admin', icon: <AccountCircleIcon />},
-                {text: 'logout', icon: <ExitToAppIcon />} ];
+const sections =  [ {text: 'users', icon: <GroupIcon />}, 
+                    {text: 'apps', icon: <AppsIcon />}, 
+                    {text: 'clients', icon: <DevicesOtherIcon />}, 
+                    {text: 'admin', icon: <AccountCircleIcon />},
+                    {text: 'logout', icon: <ExitToAppIcon />} ];
 
-const servers = ['A Raspberry PI', 'Some server'];
+const serversDemo = ['A Raspberry PI', 'Some server'];
 
 const commonButtonStyles = {
   root: {
@@ -74,8 +75,11 @@ const themeFactory = (isLight) => ({
 const darkTheme = createTheme(themeFactory(false))
 const lightTheme = createTheme(themeFactory(true))
 
-export default function Layout() {
+export default function Layout({ logged }) {
   
+  var pages = (logged==='out' ? [] : sections)
+  var servers = (logged==='out' ? serversDemo : [])
+
   const [theme, setTheme] = useState(darkTheme)
   const toggleTheme = () => {
     setTheme(theme === lightTheme ? darkTheme : lightTheme)
@@ -99,7 +103,7 @@ export default function Layout() {
             </Typography>
             <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
               @0.0.0
-            </Typography>
+            </Typography> 
             {pages.map((element, index)=>(
               <Button key={index} variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
                 {element.text}
@@ -131,21 +135,21 @@ export default function Layout() {
           <Toolbar />
           <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', }}>
             <List sx={{ padding: '0' }}>
-              <ListItemButton>
+              <ListItemButton disabled={logged==='out'}>
                 <ListItemText primary='All Messages' />
               </ListItemButton>
             </List>
-            <Divider />
+            <Divider sx={ (logged==='out') && { borderWidth: '0.01rem' }}/>
             <List sx={{ padding: '0' }}>
               {servers.map((text, id) => (
                 <ListItem key={id} disablePadding>
-                  <ListItemButton>
+                  <ListItemButton disabled={logged==='out'}>
                     <ListItemText primary={text} />
                   </ListItemButton>
                 </ListItem>
               ))}
             </List>
-            <Divider sx={{ borderTopWidth: '2px' }}/>
+            <Divider sx={ (logged!=='out') && { borderWidth: '0.01rem' }}/>
             <Typography align='center' style={{marginTop: 10}}>
               <Button variant='primary' sx={{ p: '0.3rem 0.5rem', transitionDuration: '0ms' }}>
                   enable notifications
@@ -153,35 +157,8 @@ export default function Layout() {
             </Typography>
           </Box>
         </Drawer>
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          sx={{ minHeight: '100vh' }} 
-        >
-          <Toolbar/>
-          <Box>
-            <Typography variant='h4' sx={{my: '2rem'}}>Login</Typography>
-            <Stack
-              spacing={2.5}
-              alignItems='center' justifyContent='center'
-              sx={{
-                boxShadow: '10',
-                borderRadius: '3px',
-                p: '1.4rem 2.1rem',
-                bgcolor: theme.palette.drawerBackground.main,
-              }}
-            >
-              <TextField id='username' label='Username' variant='standard' />
-              <TextField id='passcode' label='Password' variant='standard' type='password' />
-              <Typography>
-                <Button variant='contained' size='large'>login</Button>
-              </Typography>
-            </Stack>
-          </Box>
-        </Grid>
+        { (logged==='out') && <Login theme={theme}/> }
       </Box>
     </ThemeProvider>
   );
 }
-
