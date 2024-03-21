@@ -1,7 +1,8 @@
 import { Typography, Box, Toolbar, Grid } from "@mui/material";
 
-export default function Users() {
+export default function Apps() {
     return (
+        <>
         <Grid
             container
             direction="column"
@@ -11,9 +12,10 @@ export default function Users() {
             <Toolbar/>
             <Box>
                 <Typography>
-                    Users
+                    Apps
                 </Typography>
             </Box>
         </Grid>
+        </>
     )
 }

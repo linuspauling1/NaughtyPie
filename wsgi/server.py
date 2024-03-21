@@ -1,18 +1,15 @@
 import datetime
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, jsonify, render_template, request, url_for, redirect
 from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, logout_user
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 app.config['SECRET_KEY'] = 'this_is_my_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tables.db'
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = 'user'
     username = db.Column(db.String(50), primary_key=True)
     passcode = db.Column(db.String(50), nullable=False)
@@ -45,24 +42,23 @@ def initialize_db():
         print("Machines:", user.machines)
         print("--------------")
 
-@login_manager.user_loader
-def loader_user(username):
-    return User.query.get(username)
-
-@app.route('/login',methods=['GET','POST'])
+@app.route('/login',methods=['POST'])
 def login():
-    username=request.form.get('username')
-    passcode=request.form.get('password')
+    try:
+        data = request.json
+        username = data['username']
+        passcode = data['passcode']
+        print(username + ' ' + passcode)
+    except KeyError:
+        return jsonify({'error': 'Missing username or password'}), 400
     if request.method == 'POST':
         user = User.query.get(username)
         if user and user.passcode == passcode:
-            login_user(user)
-            return redirect(url_for('home'))
-    return render_template('login.html')
+            return jsonify({'message': 'Login successful'}), 200
+    return jsonify({'error': 'Invalid credentials'}), 401
 
 @app.route('/logout')
 def logout():
-    logout_user()
     return redirect(url_for('home'))
 
 @app.route('/')

@@ -22,14 +22,16 @@ import AppsIcon from '@mui/icons-material/Apps';
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useState, useEffect } from 'react';
 
-import io from 'socket.io-client';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useState, } from 'react';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 
 import Login from './Login';
-
-const socket = io('http://localhost:5000');
+import Apps from './Apps';
+import Clients from './Clients';
+import Messages from './Messages';
+import Users from './Users';
 
 const drawerWidth = 250;
 
@@ -75,10 +77,12 @@ const themeFactory = (isLight) => ({
 const darkTheme = createTheme(themeFactory(false))
 const lightTheme = createTheme(themeFactory(true))
 
-export default function Layout({ logged }) {
+export default function Layout() {
   
-  var pages = (logged==='out' ? [] : sections)
-  var servers = (logged==='out' ? serversDemo : [])
+  const [logged, isLogged] = useState(false)
+
+  var pages = (logged ? sections : [])
+  var servers = (logged ? [] : serversDemo)
 
   const [theme, setTheme] = useState(darkTheme)
   const toggleTheme = () => {
@@ -86,79 +90,103 @@ export default function Layout({ logged }) {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar
-          position='fixed'
-          sx={{ 
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-            backgroundImage: 'none',
-            backgroundColor: '#3f51b5',
-          }}
-        >
-          <Toolbar>
-            <Typography variant='h5' sx={{ cursor: 'pointer', userSelect: 'none' }}>
-              Naughty pie
-            </Typography>
-            <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
-              @0.0.0
-            </Typography> 
-            {pages.map((element, index)=>(
-              <Button key={index} variant='primary' startIcon={element.icon} sx={{ padding: '0.5rem', }}>
-                {element.text}
-              </Button>
-            ))}
-            <IconButton onClick={toggleTheme} sx={{ color: 'inherit', }}>
-              <HighlightIcon sx={{ margin: '3px', }} />
-            </IconButton>
-            <IconButton
-              onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')}
-              sx={{ color: 'inherit', }}
-            >
-              <GitHubIcon sx={{ margin: '3px', fontSize: '1.7rem' }} />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant='permanent'
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { 
-              width: drawerWidth, 
-              boxSizing: 'border-box',
-              backgroundColor: theme.palette.drawerBackground.main,
-            },
-          }}
-        >
-          <Toolbar />
-          <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', }}>
-            <List sx={{ padding: '0' }}>
-              <ListItemButton disabled={logged==='out'}>
-                <ListItemText primary='All Messages' />
-              </ListItemButton>
-            </List>
-            <Divider sx={ (logged==='out') && { borderWidth: '0.01rem' }}/>
-            <List sx={{ padding: '0' }}>
-              {servers.map((text, id) => (
-                <ListItem key={id} disablePadding>
-                  <ListItemButton disabled={logged==='out'}>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <AppBar
+            position='fixed'
+            sx={{ 
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+              backgroundImage: 'none',
+              backgroundColor: '#3f51b5',
+            }}
+          >
+            <Toolbar>
+              <Typography variant='h5' sx={{ cursor: 'pointer', userSelect: 'none' }}>
+                Naughty pie
+              </Typography>
+              <Typography sx={{ marginLeft: '0.8rem', flexGrow: 1, cursor: 'pointer', userSelect: 'none' }}>
+                @0.0.0
+              </Typography> 
+              {pages.map((element, index)=>(
+                <Button
+                  key={index} 
+                  variant='primary' 
+                  startIcon={element.icon} 
+                  component={Link} to={element.text}
+                  sx={{ padding: '0.5rem', }}
+                >
+                  {element.text}
+                </Button>
               ))}
-            </List>
-            <Divider sx={ (logged!=='out') && { borderWidth: '0.01rem' }}/>
-            <Typography align='center' style={{marginTop: 10}}>
-              <Button variant='primary' sx={{ p: '0.3rem 0.5rem', transitionDuration: '0ms' }}>
-                  enable notifications
-              </Button>
-            </Typography>
-          </Box>
-        </Drawer>
-        { (logged==='out') && <Login theme={theme}/> }
-      </Box>
-    </ThemeProvider>
+              <IconButton onClick={toggleTheme} sx={{ color: 'inherit', }}>
+                <HighlightIcon sx={{ margin: '3px', }} />
+              </IconButton>
+              <IconButton
+                onClick={() => window.open('https://github.com/linuspauling1/NaughtyPie')}
+                sx={{ color: 'inherit', }}
+              >
+                <GitHubIcon sx={{ margin: '3px', fontSize: '1.7rem' }} />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant='permanent'
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: { 
+                width: drawerWidth, 
+                boxSizing: 'border-box',
+                backgroundColor: theme.palette.drawerBackground.main,
+              },
+            }}
+          >
+            <Toolbar />
+            <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', }}>
+              <List sx={{ padding: '0' }}>
+                <ListItemButton disabled={!logged} component={Link} to='/messages'>
+                    <ListItemText primary='All Messages' />
+                </ListItemButton>
+              </List>
+              <Divider sx={ logged ? {} : { borderWidth: '0.01rem' }}/>
+              <List sx={{ padding: '0' }}>
+                {servers.map((text, id) => (
+                  <ListItem key={id} disablePadding>
+                    <ListItemButton disabled={!logged}>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider sx={ logged ? { borderWidth: '0.01rem' } : {}}/>
+              <Typography align='center' style={{marginTop: 10}}>
+                <Button variant='primary' sx={{ p: '0.3rem 0.5rem', transitionDuration: '0ms' }}>
+                    enable notifications
+                </Button>
+              </Typography>
+            </Box>
+          </Drawer>
+          <Routes>
+            {
+              logged ?
+              <>
+                <Route exact path="apps" element={<Apps />} />
+                <Route exact path="clients" element={<Clients />} />
+                <Route exact path="users" element={<Users />} />
+                <Route exact path="messages" element={<Messages />} />
+                <Route path="*" element={<Navigate to='/messages' />} /> 
+              </>
+              :
+              <>
+                <Route exact path="login" element={<Login theme={theme} isLogged={isLogged}/>} />
+                <Route path="*" element={<Navigate to='/login' />} />
+              </>
+            }
+          </Routes>
+        </Box>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
